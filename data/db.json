@@ -1,0 +1,971 @@
+{
+  "transactions": [
+    {
+      "id": "tx-1789138503019-99",
+      "userId": "u1",
+      "amount": 950,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Amit Sharma",
+      "purpose": "grocery shopping",
+      "timestamp": "2026-09-11T14:55:03.019Z",
+      "status": "VERIFY",
+      "riskScore": 35,
+      "riskLevel": "REVIEW",
+      "decision": "VERIFY",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789138316627-653",
+      "userId": "u1",
+      "amount": 50000,
+      "currency": "INR",
+      "recipientId": "unknown_user@upi",
+      "recipientName": "Unknown Merchant",
+      "purpose": "Service Payment",
+      "context": "Payment requested",
+      "timestamp": "2026-09-11T14:51:56.627Z",
+      "status": "BLOCKED",
+      "riskScore": 80,
+      "riskLevel": "CRITICAL",
+      "decision": "BLOCK",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        },
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "KNOWN_SCAM_PATTERN",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Sending a large sum of money to a completely unknown recipient."
+        },
+        {
+          "type": "BEHAVIOUR_ANOMALY",
+          "impact": 5,
+          "severity": "LOW",
+          "description": "Transaction amount significantly deviates from historical baseline."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789138211522-889",
+      "userId": "u1",
+      "amount": 2500,
+      "currency": "INR",
+      "recipientId": "new_user@upi",
+      "recipientName": "Ishwari ",
+      "purpose": "Event Registration",
+      "context": "Registration payment",
+      "timestamp": "2026-09-11T14:50:11.522Z",
+      "status": "VERIFY",
+      "riskScore": 35,
+      "riskLevel": "REVIEW",
+      "decision": "VERIFY",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789138163146-498",
+      "userId": "u1",
+      "amount": 25000,
+      "currency": "INR",
+      "recipientId": "known_verified@upi",
+      "recipientName": "Amit Sharma",
+      "purpose": "College Fees",
+      "context": "Monthly college payment",
+      "timestamp": "2026-09-11T14:49:23.146Z",
+      "status": "COMPLETED",
+      "riskScore": 25,
+      "riskLevel": "SAFE",
+      "decision": "APPROVE",
+      "signals": [
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "BEHAVIOUR_ANOMALY",
+          "impact": 5,
+          "severity": "LOW",
+          "description": "Transaction amount significantly deviates from historical baseline."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789138087347-882",
+      "userId": "u1",
+      "amount": 750,
+      "currency": "INR",
+      "recipientId": "known_verified@upi",
+      "recipientName": "Madhuri Bhadange",
+      "purpose": "Dinner",
+      "context": "Dinner payment",
+      "timestamp": "2026-09-11T14:48:07.347Z",
+      "status": "COMPLETED",
+      "riskScore": 0,
+      "riskLevel": "SAFE",
+      "decision": "APPROVE",
+      "signals": []
+    },
+    {
+      "id": "tx-1789134988275-701",
+      "userId": "u1",
+      "amount": 90000,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Shubhangi ",
+      "purpose": "Collage Fees ",
+      "timestamp": "2026-09-11T13:56:28.276Z",
+      "status": "BLOCKED",
+      "riskScore": 80,
+      "riskLevel": "CRITICAL",
+      "decision": "BLOCK",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        },
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "KNOWN_SCAM_PATTERN",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Sending a large sum of money to a completely unknown recipient."
+        },
+        {
+          "type": "BEHAVIOUR_ANOMALY",
+          "impact": 5,
+          "severity": "LOW",
+          "description": "Transaction amount significantly deviates from historical baseline."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789134684080-742",
+      "userId": "u1",
+      "amount": 5000,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Unnati",
+      "purpose": "Shopping",
+      "timestamp": "2026-09-11T13:51:24.080Z",
+      "status": "VERIFY",
+      "riskScore": 35,
+      "riskLevel": "REVIEW",
+      "decision": "VERIFY",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789134523835-265",
+      "userId": "u1",
+      "amount": 950000,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Unnati",
+      "purpose": "education",
+      "timestamp": "2026-09-11T13:48:43.835Z",
+      "status": "BLOCKED",
+      "riskScore": 80,
+      "riskLevel": "CRITICAL",
+      "decision": "BLOCK",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        },
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "KNOWN_SCAM_PATTERN",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Sending a large sum of money to a completely unknown recipient."
+        },
+        {
+          "type": "BEHAVIOUR_ANOMALY",
+          "impact": 5,
+          "severity": "LOW",
+          "description": "Transaction amount significantly deviates from historical baseline."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789130528875-223",
+      "userId": "u1",
+      "amount": 100000,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Unnati",
+      "purpose": "Shopping",
+      "timestamp": "2026-09-11T12:42:08.875Z",
+      "status": "BLOCKED",
+      "riskScore": 80,
+      "riskLevel": "CRITICAL",
+      "decision": "BLOCK",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        },
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "KNOWN_SCAM_PATTERN",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Sending a large sum of money to a completely unknown recipient."
+        },
+        {
+          "type": "BEHAVIOUR_ANOMALY",
+          "impact": 5,
+          "severity": "LOW",
+          "description": "Transaction amount significantly deviates from historical baseline."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789128616193-323",
+      "userId": "u1",
+      "amount": 5000,
+      "currency": "INR",
+      "recipientId": "8767103423@upi",
+      "recipientName": "Dhanyanjay",
+      "purpose": "Dinner",
+      "timestamp": "2026-09-11T12:10:16.193Z",
+      "status": "VERIFY",
+      "riskScore": 35,
+      "riskLevel": "REVIEW",
+      "decision": "VERIFY",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "impact": 15,
+          "severity": "MEDIUM",
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "impact": 20,
+          "severity": "HIGH",
+          "description": "Recipient identity has not been verified by authoritative sources."
+        }
+      ]
+    },
+    {
+      "id": "tx-1789128535386-985",
+      "userId": "u1",
+      "amount": 1250,
+      "currency": "INR",
+      "recipientId": "known_verified@upi",
+      "recipientName": "Amit Sharma",
+      "purpose": "Dinner split",
+      "timestamp": "2026-09-11T12:08:55.386Z",
+      "status": "COMPLETED",
+      "riskScore": 0,
+      "riskLevel": "SAFE",
+      "decision": "APPROVE",
+      "signals": []
+    },
+    {
+      "id": "tx-demo-1",
+      "userId": "u1",
+      "amount": 750,
+      "currency": "INR",
+      "recipientId": "known_verified@upi",
+      "recipientName": "Amit Sharma",
+      "purpose": "Dinner with team",
+      "timestamp": "2026-09-11T11:33:29.411Z",
+      "riskScore": 8,
+      "riskLevel": "SAFE",
+      "decision": "APPROVE",
+      "status": "COMPLETED",
+      "signals": [],
+      "agentAssessment": {
+        "riskScore": 8,
+        "riskLevel": "SAFE",
+        "recommendedAction": "APPROVE",
+        "confidence": 0.98,
+        "signals": [],
+        "explanation": "Known verified recipient with normal transaction amount.",
+        "recommendedVerification": []
+      }
+    },
+    {
+      "id": "tx-demo-2",
+      "userId": "u1",
+      "amount": 2500,
+      "currency": "INR",
+      "recipientId": "new_user@upi",
+      "recipientName": "Rahul Kumar",
+      "purpose": "Book purchase",
+      "timestamp": "2026-09-11T09:08:29.411Z",
+      "riskScore": 35,
+      "riskLevel": "REVIEW",
+      "decision": "VERIFY",
+      "status": "VERIFY",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "severity": "MEDIUM",
+          "impact": 15,
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "severity": "HIGH",
+          "impact": 20,
+          "description": "Recipient identity has not been verified by authoritative sources."
+        }
+      ],
+      "agentAssessment": {
+        "riskScore": 35,
+        "riskLevel": "REVIEW",
+        "recommendedAction": "VERIFY",
+        "confidence": 0.92,
+        "signals": [
+          {
+            "type": "UNVERIFIED_RECIPIENT",
+            "severity": "HIGH",
+            "impact": 20,
+            "description": "New unverified party requiring identification check."
+          }
+        ],
+        "explanation": "New recipient requires one-time identity verification.",
+        "recommendedVerification": [
+          "Verify recipient identity through official contacts."
+        ]
+      }
+    },
+    {
+      "id": "tx-demo-3",
+      "userId": "u1",
+      "amount": 95000,
+      "currency": "INR",
+      "recipientId": "kyc_support@upi",
+      "recipientName": "Security Desk",
+      "purpose": "KYC Update",
+      "context": "Your account will be blocked today. Send the money immediately for KYC verification.",
+      "timestamp": "2026-09-11T07:08:29.412Z",
+      "riskScore": 96,
+      "riskLevel": "CRITICAL",
+      "decision": "BLOCK",
+      "status": "BLOCKED",
+      "signals": [
+        {
+          "type": "NEW_RECIPIENT",
+          "severity": "MEDIUM",
+          "impact": 15,
+          "description": "Recipient has no prior transaction history with user."
+        },
+        {
+          "type": "UNVERIFIED_RECIPIENT",
+          "severity": "HIGH",
+          "impact": 20,
+          "description": "Recipient identity has not been verified."
+        },
+        {
+          "type": "UNUSUAL_AMOUNT",
+          "severity": "HIGH",
+          "impact": 20,
+          "description": "Transaction amount is significantly above the user's normal range."
+        },
+        {
+          "type": "URGENCY_LANGUAGE",
+          "severity": "HIGH",
+          "impact": 15,
+          "description": "Detected urgency keywords: account blocked, immediately."
+        },
+        {
+          "type": "KNOWN_SCAM_PATTERN",
+          "severity": "CRITICAL",
+          "impact": 30,
+          "description": "The message creates urgency by threatening account consequences."
+        }
+      ],
+      "agentAssessment": {
+        "riskScore": 96,
+        "riskLevel": "CRITICAL",
+        "recommendedAction": "BLOCK",
+        "confidence": 0.97,
+        "signals": [
+          {
+            "type": "SOCIAL_ENGINEERING",
+            "severity": "CRITICAL",
+            "impact": 30,
+            "description": "Aggressive account suspension pretext detected."
+          }
+        ],
+        "explanation": "Classic social engineering KYC phishing scam targeting account seizure fears.",
+        "recommendedVerification": [
+          "Do not send funds under any circumstances.",
+          "Contact your bank directly via the number printed on your debit/credit card."
+        ]
+      }
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "log-1789138505672-169",
+      "transactionId": "tx-1789138503019-99",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T14:55:05.672Z",
+      "metadata": {
+        "score": 35
+      }
+    },
+    {
+      "id": "log-1789138504959-213",
+      "transactionId": "tx-1789138503019-99",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T14:55:04.959Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789138503088-567",
+      "transactionId": "tx-1789138503019-99",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T14:55:03.088Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789138503056-882",
+      "transactionId": "tx-1789138503019-99",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T14:55:03.056Z",
+      "metadata": {
+        "amount": 950
+      }
+    },
+    {
+      "id": "log-1789138319339-3",
+      "transactionId": "tx-1789138316627-653",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T14:51:59.339Z",
+      "metadata": {
+        "score": 80
+      }
+    },
+    {
+      "id": "log-1789138318537-244",
+      "transactionId": "tx-1789138316627-653",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T14:51:58.537Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789138316675-906",
+      "transactionId": "tx-1789138316627-653",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T14:51:56.675Z",
+      "metadata": {
+        "recipientId": "unknown_user@upi"
+      }
+    },
+    {
+      "id": "log-1789138316646-470",
+      "transactionId": "tx-1789138316627-653",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T14:51:56.646Z",
+      "metadata": {
+        "amount": 50000
+      }
+    },
+    {
+      "id": "log-1789138214021-446",
+      "transactionId": "tx-1789138211522-889",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T14:50:14.021Z",
+      "metadata": {
+        "score": 35
+      }
+    },
+    {
+      "id": "log-1789138213461-72",
+      "transactionId": "tx-1789138211522-889",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T14:50:13.461Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789138211581-146",
+      "transactionId": "tx-1789138211522-889",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T14:50:11.581Z",
+      "metadata": {
+        "recipientId": "new_user@upi"
+      }
+    },
+    {
+      "id": "log-1789138211548-96",
+      "transactionId": "tx-1789138211522-889",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T14:50:11.548Z",
+      "metadata": {
+        "amount": 2500
+      }
+    },
+    {
+      "id": "log-1789138166267-382",
+      "transactionId": "tx-1789138163146-498",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T14:49:26.267Z",
+      "metadata": {
+        "score": 25
+      }
+    },
+    {
+      "id": "log-1789138165066-665",
+      "transactionId": "tx-1789138163146-498",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T14:49:25.066Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789138163197-942",
+      "transactionId": "tx-1789138163146-498",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T14:49:23.197Z",
+      "metadata": {
+        "recipientId": "known_verified@upi"
+      }
+    },
+    {
+      "id": "log-1789138163171-676",
+      "transactionId": "tx-1789138163146-498",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T14:49:23.171Z",
+      "metadata": {
+        "amount": 25000
+      }
+    },
+    {
+      "id": "log-1789138090077-937",
+      "transactionId": "tx-1789138087347-882",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T14:48:10.077Z",
+      "metadata": {
+        "score": 0
+      }
+    },
+    {
+      "id": "log-1789138089311-709",
+      "transactionId": "tx-1789138087347-882",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T14:48:09.311Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789138087403-511",
+      "transactionId": "tx-1789138087347-882",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T14:48:07.403Z",
+      "metadata": {
+        "recipientId": "known_verified@upi"
+      }
+    },
+    {
+      "id": "log-1789138087370-737",
+      "transactionId": "tx-1789138087347-882",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T14:48:07.370Z",
+      "metadata": {
+        "amount": 750
+      }
+    },
+    {
+      "id": "log-1789134990911-928",
+      "transactionId": "tx-1789134988275-701",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T13:56:30.911Z",
+      "metadata": {
+        "score": 80
+      }
+    },
+    {
+      "id": "log-1789134990206-491",
+      "transactionId": "tx-1789134988275-701",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T13:56:30.207Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789134988335-165",
+      "transactionId": "tx-1789134988275-701",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T13:56:28.335Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789134988305-971",
+      "transactionId": "tx-1789134988275-701",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T13:56:28.305Z",
+      "metadata": {
+        "amount": 90000
+      }
+    },
+    {
+      "id": "log-1789134686658-619",
+      "transactionId": "tx-1789134684080-742",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T13:51:26.658Z",
+      "metadata": {
+        "score": 35
+      }
+    },
+    {
+      "id": "log-1789134686020-685",
+      "transactionId": "tx-1789134684080-742",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T13:51:26.020Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789134684157-731",
+      "transactionId": "tx-1789134684080-742",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T13:51:24.157Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789134684116-809",
+      "transactionId": "tx-1789134684080-742",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T13:51:24.116Z",
+      "metadata": {
+        "amount": 5000
+      }
+    },
+    {
+      "id": "log-1789134526623-517",
+      "transactionId": "tx-1789134523835-265",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T13:48:46.623Z",
+      "metadata": {
+        "score": 80
+      }
+    },
+    {
+      "id": "log-1789134525914-862",
+      "transactionId": "tx-1789134523835-265",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T13:48:45.914Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789134523914-602",
+      "transactionId": "tx-1789134523835-265",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T13:48:43.914Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789134523874-914",
+      "transactionId": "tx-1789134523835-265",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T13:48:43.875Z",
+      "metadata": {
+        "amount": 950000
+      }
+    },
+    {
+      "id": "log-1789130531935-93",
+      "transactionId": "tx-1789130528875-223",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T12:42:11.935Z",
+      "metadata": {
+        "score": 80
+      }
+    },
+    {
+      "id": "log-1789130530766-868",
+      "transactionId": "tx-1789130528875-223",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T12:42:10.766Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789130528917-668",
+      "transactionId": "tx-1789130528875-223",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T12:42:08.917Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789130528898-850",
+      "transactionId": "tx-1789130528875-223",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T12:42:08.898Z",
+      "metadata": {
+        "amount": 100000
+      }
+    },
+    {
+      "id": "log-1789128618819-799",
+      "transactionId": "tx-1789128616193-323",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T12:10:18.819Z",
+      "metadata": {
+        "score": 35
+      }
+    },
+    {
+      "id": "log-1789128618097-917",
+      "transactionId": "tx-1789128616193-323",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T12:10:18.097Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789128616240-577",
+      "transactionId": "tx-1789128616193-323",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T12:10:16.240Z",
+      "metadata": {
+        "recipientId": "8767103423@upi"
+      }
+    },
+    {
+      "id": "log-1789128616219-78",
+      "transactionId": "tx-1789128616193-323",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T12:10:16.219Z",
+      "metadata": {
+        "amount": 5000
+      }
+    },
+    {
+      "id": "log-1789128536141-158",
+      "transactionId": "tx-1789128535386-985",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T12:08:56.141Z",
+      "metadata": {
+        "score": 0
+      }
+    },
+    {
+      "id": "log-1789128535538-438",
+      "transactionId": "tx-1789128535386-985",
+      "event": "TRANSACTION_ANALYZED",
+      "timestamp": "2026-09-11T12:08:55.538Z",
+      "metadata": {
+        "message": "Starting Paytercept orchestration."
+      }
+    },
+    {
+      "id": "log-1789128535411-92",
+      "transactionId": "tx-1789128535386-985",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T12:08:55.411Z",
+      "metadata": {
+        "recipientId": "known_verified@upi"
+      }
+    },
+    {
+      "id": "log-1789128535400-193",
+      "transactionId": "tx-1789128535386-985",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T12:08:55.400Z",
+      "metadata": {
+        "amount": 1250
+      }
+    },
+    {
+      "id": "log-1",
+      "transactionId": "tx-demo-3",
+      "event": "TRANSACTION_CREATED",
+      "timestamp": "2026-09-11T07:08:29.412Z",
+      "metadata": {
+        "amount": 95000
+      }
+    },
+    {
+      "id": "log-2",
+      "transactionId": "tx-demo-3",
+      "event": "ANALYSIS_REQUESTED",
+      "timestamp": "2026-09-11T07:08:29.912Z",
+      "metadata": {
+        "recipientId": "kyc_support@upi"
+      }
+    },
+    {
+      "id": "log-3",
+      "transactionId": "tx-demo-3",
+      "event": "RISK_CALCULATED",
+      "timestamp": "2026-09-11T07:08:30.912Z",
+      "metadata": {
+        "score": 96,
+        "riskLevel": "CRITICAL"
+      }
+    },
+    {
+      "id": "log-4",
+      "transactionId": "tx-demo-3",
+      "event": "PAYMENT_BLOCKED",
+      "timestamp": "2026-09-11T07:08:31.412Z",
+      "metadata": {
+        "reason": "High confidence social engineering attack"
+      }
+    }
+  ],
+  "recipients": {
+    "known_verified@upi": {
+      "id": "r1",
+      "identifier": "known_verified@upi",
+      "name": "Amit Sharma",
+      "verified": true,
+      "known": true,
+      "previousTransactionCount": 15,
+      "riskLevel": "LOW"
+    },
+    "new_user@upi": {
+      "id": "r2",
+      "identifier": "new_user@upi",
+      "name": "Rahul Kumar",
+      "verified": false,
+      "known": false,
+      "previousTransactionCount": 0,
+      "riskLevel": "MEDIUM"
+    },
+    "vendor_rush@upi": {
+      "id": "r3",
+      "identifier": "vendor_rush@upi",
+      "name": "Quick Delivery",
+      "verified": false,
+      "known": false,
+      "previousTransactionCount": 1,
+      "riskLevel": "HIGH"
+    },
+    "kyc_support@upi": {
+      "id": "r4",
+      "identifier": "kyc_support@upi",
+      "name": "Security Desk",
+      "verified": false,
+      "known": false,
+      "previousTransactionCount": 0,
+      "riskLevel": "HIGH"
+    }
+  }
+}
