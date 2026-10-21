@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -11,16 +11,25 @@ import {
   UserCheck,
   Brain,
   FileText,
+  Tag,
+  Check,
+  Lock,
 } from "lucide-react";
 import { Transaction, AuditLog } from "@/types";
 
 export default function SecurityHistory() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filter, setFilter] = useState<string>("All");
+  const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
   const [loading, setLoading] = useState(true);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Approval controls in Dossier
+  const [approvalNotes, setApprovalNotes] = useState("");
+  const [use2FA, setUse2FA] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -44,6 +53,8 @@ export default function SecurityHistory() {
   const openDetails = async (tx: Transaction) => {
     setSelectedTx(tx);
     setLoadingDetails(true);
+    setApprovalNotes(tx.approvalNotes || "");
+    setUse2FA(!!tx.verifiedWith2FA);
     try {
       const res = await fetch(`/api/transactions/${tx.id}`);
       if (res.ok) {
@@ -57,22 +68,140 @@ export default function SecurityHistory() {
     }
   };
 
-  const filteredTransactions = transactions.filter((tx) => {
-    if (filter === "All") return true;
-    if (filter === "Safe") return tx.riskLevel === "SAFE" || tx.decision === "APPROVE";
-    if (filter === "Review") return tx.riskLevel === "REVIEW" || tx.decision === "VERIFY";
-    if (filter === "Paused") return tx.riskLevel === "HIGH" || tx.decision === "PAUSE" || tx.status === "PAUSED";
-    if (filter === "Blocked") return tx.riskLevel === "CRITICAL" || tx.decision === "BLOCK" || tx.status === "BLOCKED";
-    return true;
-  });
+  const handleApproveInDossier = async () => {
+    if (!selectedTx) return;
+    try {
+      setActionLoading(true);
+      const res = await fetch(`/api/transactions/${selectedTx.id}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          notes: approvalNotes || "Approved from Risk Dossier Panel",
+          approver: "Security Officer / You",
+          verifiedWith2FA: use2FA,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.transaction) setSelectedTx(data.transaction);
+        await fetchTransactions();
+        // Refresh audit logs
+        const logRes = await fetch(`/api/transactions/${selectedTx.id}`);
+        if (logRes.ok) {
+          const lData = await logRes.json();
+          if (lData.auditLogs) setAuditLogs(lData.auditLogs);
+        }
+      }
+    } catch (err) {
+      console.error("Approval failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeclineInDossier = async () => {
+    if (!selectedTx) return;
+    try {
+      setActionLoading(true);
+      const res = await fetch(`/api/transactions/${selectedTx.id}/reject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reason: approvalNotes || "Declined from Risk Dossier Panel",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.transaction) setSelectedTx(data.transaction);
+        await fetchTransactions();
+      }
+    } catch (err) {
+      console.error("Decline failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleBlockInDossier = async () => {
+    if (!selectedTx) return;
+    try {
+      setActionLoading(true);
+      const res = await fetch(`/api/transactions/${selectedTx.id}/block`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reason: "Flagged and blocked from Risk Dossier",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.transaction) setSelectedTx(data.transaction);
+        await fetchTransactions();
+      }
+    } catch (err) {
+      console.error("Block failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleCategoryChange = async (cat: string) => {
+    if (!selectedTx) return;
+    try {
+      const res = await fetch(`/api/transactions/${selectedTx.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category: cat }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.transaction) setSelectedTx(data.transaction);
+        await fetchTransactions();
+      }
+    } catch (err) {
+      console.error("Category update failed:", err);
+    }
+  };
+
+  const isPendingApproval = (tx: Transaction) => {
+    return (
+      (tx.status === "VERIFY" ||
+        tx.status === "PAUSED" ||
+        tx.status === "PENDING" ||
+        tx.decision === "VERIFY" ||
+        tx.decision === "PAUSE") &&
+      tx.status !== "COMPLETED" &&
+      tx.status !== "BLOCKED" &&
+      tx.status !== "CANCELLED"
+    );
+  };
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((tx) => {
+      // Status filter
+      if (filter === "Approvals" && !isPendingApproval(tx)) return false;
+      if (filter === "Safe" && tx.riskLevel !== "SAFE" && tx.decision !== "APPROVE") return false;
+      if (filter === "Review" && tx.riskLevel !== "REVIEW" && tx.decision !== "VERIFY") return false;
+      if (filter === "Paused" && tx.riskLevel !== "HIGH" && tx.decision !== "PAUSE" && tx.status !== "PAUSED") return false;
+      if (filter === "Blocked" && tx.riskLevel !== "CRITICAL" && tx.decision !== "BLOCK" && tx.status !== "BLOCKED") return false;
+
+      // Category filter
+      if (categoryFilter !== "ALL" && (tx.category || "PERSONAL") !== categoryFilter) return false;
+
+      return true;
+    });
+  }, [transactions, filter, categoryFilter]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight mb-1">Security History</h1>
+          <h1 className="text-2xl font-bold tracking-tight mb-1">Security History &amp; Audit Trail</h1>
           <p className="text-muted-foreground text-sm">
-            Live audit logs and deep-dive risk dossiers for every analyzed transaction.
+            Categorized ledgers, live audit trails, and interactive approval dossiers for every payment.
           </p>
         </div>
         <button
@@ -84,21 +213,44 @@ export default function SecurityHistory() {
       </div>
 
       <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-        {/* Filters */}
-        <div className="p-4 border-b border-border bg-secondary/30 flex gap-2 overflow-x-auto">
-          {["All", "Safe", "Review", "Paused", "Blocked"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setFilter(tab)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-full border transition-all ${
-                filter === tab
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background/80 text-muted-foreground border-border hover:bg-secondary hover:text-foreground"
-              }`}
+        {/* Filters Toolbar */}
+        <div className="p-4 border-b border-border bg-secondary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Status Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0">
+            {["All", "Approvals", "Safe", "Review", "Paused", "Blocked"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setFilter(tab)}
+                className={`px-3.5 py-1.5 text-xs font-medium rounded-full border transition-all whitespace-nowrap ${
+                  filter === tab
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-background/80 text-muted-foreground border-border hover:bg-secondary hover:text-foreground"
+                }`}
+              >
+                {tab === "Approvals" ? "⚠️ Needs Approval" : tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Category Selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
+              <Tag className="h-3 w-3" /> Category:
+            </span>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="text-xs bg-background border border-border rounded-lg px-2.5 py-1 text-foreground focus:outline-none"
             >
-              {tab}
-            </button>
-          ))}
+              <option value="ALL">All Categories</option>
+              <option value="PERSONAL">Personal</option>
+              <option value="VENDOR">Vendor &amp; Bills</option>
+              <option value="UTILITIES">Utilities</option>
+              <option value="PAYROLL">Payroll</option>
+              <option value="EMERGENCY">Emergency</option>
+              <option value="SUSPICIOUS">Suspicious</option>
+            </select>
+          </div>
         </div>
 
         {/* Table */}
@@ -106,80 +258,91 @@ export default function SecurityHistory() {
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr className="border-b border-border bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                <th className="px-6 py-4">Time</th>
-                <th className="px-6 py-4">Recipient</th>
-                <th className="px-6 py-4">Amount</th>
-                <th className="px-6 py-4">Risk Level</th>
-                <th className="px-6 py-4">Decision</th>
-                <th className="px-6 py-4 text-right">Action</th>
+                <th className="px-5 py-3.5">Time</th>
+                <th className="px-5 py-3.5">Recipient</th>
+                <th className="px-5 py-3.5">Category</th>
+                <th className="px-5 py-3.5">Amount</th>
+                <th className="px-5 py-3.5">Risk Level</th>
+                <th className="px-5 py-3.5">Decision</th>
+                <th className="px-5 py-3.5 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filteredTransactions.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-muted-foreground text-sm">
+                  <td colSpan={7} className="px-6 py-8 text-center text-muted-foreground text-sm">
                     No transactions match the selected filter.
                   </td>
                 </tr>
               ) : (
-                filteredTransactions.map((tx) => (
-                  <tr
-                    key={tx.id}
-                    onClick={() => openDetails(tx)}
-                    className="hover:bg-secondary/40 transition-colors cursor-pointer group"
-                  >
-                    <td className="px-6 py-4 text-xs text-muted-foreground whitespace-nowrap">
-                      {new Date(tx.timestamp).toLocaleString([], {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-foreground group-hover:text-primary transition-colors">
-                        {tx.recipientName}
-                      </p>
-                      <p className="text-xs text-muted-foreground font-mono">{tx.recipientId}</p>
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-foreground">
-                      ₹{tx.amount.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          tx.riskLevel === "SAFE"
-                            ? "bg-safe/10 text-safe border border-safe/20"
-                            : tx.riskLevel === "REVIEW"
-                            ? "bg-warning/10 text-warning border border-warning/20"
-                            : "bg-destructive/10 text-destructive border border-destructive/20"
-                        }`}
-                      >
-                        {tx.riskScore !== undefined ? `${tx.riskScore}/100 ` : ""}
-                        {tx.riskLevel || "PENDING"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {tx.status === "COMPLETED" || tx.decision === "APPROVE" ? (
-                          <ShieldCheck className="h-4 w-4 text-safe" />
-                        ) : tx.status === "BLOCKED" || tx.decision === "BLOCK" ? (
-                          <ShieldX className="h-4 w-4 text-destructive" />
-                        ) : (
-                          <AlertTriangle className="h-4 w-4 text-warning" />
-                        )}
-                        <span className="text-xs font-medium capitalize">
-                          {tx.decision || tx.status}
+                filteredTransactions.map((tx) => {
+                  const needsApproval = isPendingApproval(tx);
+
+                  return (
+                    <tr
+                      key={tx.id}
+                      onClick={() => openDetails(tx)}
+                      className="hover:bg-secondary/40 transition-colors cursor-pointer group"
+                    >
+                      <td className="px-5 py-3.5 text-xs text-muted-foreground whitespace-nowrap">
+                        {new Date(tx.timestamp).toLocaleString([], {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {tx.recipientName}
+                        </p>
+                        <p className="text-xs text-muted-foreground font-mono">{tx.recipientId}</p>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded border border-border bg-secondary/50 text-foreground">
+                          <Tag className="h-2.5 w-2.5 text-muted-foreground" />
+                          {tx.category || "PERSONAL"}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="text-xs text-info font-medium hover:underline">
-                        View Dossier &rarr;
-                      </span>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-5 py-3.5 font-bold text-foreground">
+                        ₹{tx.amount.toLocaleString()}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                            tx.riskLevel === "SAFE"
+                              ? "bg-safe/10 text-safe border border-safe/20"
+                              : tx.riskLevel === "REVIEW"
+                              ? "bg-warning/10 text-warning border border-warning/20"
+                              : "bg-destructive/10 text-destructive border border-destructive/20"
+                          }`}
+                        >
+                          {tx.riskScore !== undefined ? `${tx.riskScore}/100 ` : ""}
+                          {tx.riskLevel || "PENDING"}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-1.5">
+                          {tx.status === "COMPLETED" || tx.decision === "APPROVE" ? (
+                            <ShieldCheck className="h-4 w-4 text-safe" />
+                          ) : tx.status === "BLOCKED" || tx.decision === "BLOCK" ? (
+                            <ShieldX className="h-4 w-4 text-destructive" />
+                          ) : (
+                            <AlertTriangle className="h-4 w-4 text-warning" />
+                          )}
+                          <span className="text-xs font-medium capitalize">
+                            {needsApproval ? "Needs Approval" : tx.decision || tx.status}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <span className="text-xs text-info font-medium hover:underline">
+                          View Dossier &rarr;
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -193,21 +356,28 @@ export default function SecurityHistory() {
             {/* Modal Header */}
             <div className="p-6 border-b border-border flex items-start justify-between sticky top-0 bg-card/95 backdrop-blur z-10">
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-mono px-2 py-0.5 rounded bg-secondary text-muted-foreground">
                     {selectedTx.id}
                   </span>
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                      selectedTx.decision === "APPROVE"
+                      selectedTx.decision === "APPROVE" || selectedTx.status === "COMPLETED"
                         ? "bg-safe/10 text-safe"
-                        : selectedTx.decision === "BLOCK"
+                        : selectedTx.decision === "BLOCK" || selectedTx.status === "BLOCKED"
                         ? "bg-destructive/10 text-destructive"
                         : "bg-warning/10 text-warning"
                     }`}
                   >
-                    {selectedTx.decision || selectedTx.status}
+                    {isPendingApproval(selectedTx)
+                      ? "Awaiting Approval"
+                      : selectedTx.decision || selectedTx.status}
                   </span>
+                  {selectedTx.verifiedWith2FA && (
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                      <Lock className="h-3 w-3" /> 2FA Verified
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-xl font-bold mt-1">Transaction Risk Dossier</h2>
                 <p className="text-xs text-muted-foreground">
@@ -237,14 +407,88 @@ export default function SecurityHistory() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Risk Category</p>
-                  <p className="text-sm font-semibold">{selectedTx.riskLevel || "SAFE"}</p>
+                  <p className="text-xs text-muted-foreground">Category</p>
+                  <select
+                    value={selectedTx.category || "PERSONAL"}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className="text-xs bg-background border border-border rounded px-1.5 py-0.5 mt-1 font-semibold text-primary"
+                  >
+                    <option value="PERSONAL">Personal</option>
+                    <option value="VENDOR">Vendor &amp; Bills</option>
+                    <option value="UTILITIES">Utilities</option>
+                    <option value="PAYROLL">Payroll</option>
+                    <option value="EMERGENCY">Emergency</option>
+                    <option value="SUSPICIOUS">Suspicious</option>
+                  </select>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Final Status</p>
-                  <p className="text-sm font-semibold capitalize">
+                  <p className="text-sm font-semibold capitalize mt-1">
                     {selectedTx.status.replace(/_/g, " ").toLowerCase()}
                   </p>
+                </div>
+              </div>
+
+              {/* ACTION PANEL (For Pending Approvals or overrides) */}
+              <div className="p-4 rounded-xl border border-warning/30 bg-warning/5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-warning flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" /> Approval Actions &amp; Controls
+                  </h3>
+                  {selectedTx.approvedBy && (
+                    <span className="text-xs text-safe font-semibold">
+                      Authorized by: {selectedTx.approvedBy}
+                    </span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-xs text-foreground font-medium">
+                    Approval / Override Notes:
+                  </label>
+                  <input
+                    type="text"
+                    value={approvalNotes}
+                    onChange={(e) => setApprovalNotes(e.target.value)}
+                    placeholder="Enter notes (e.g. Phone verified, emergency authorization)..."
+                    className="w-full text-xs p-2 bg-background border border-border rounded-lg"
+                  />
+                </div>
+
+                <label className="flex items-center gap-2 cursor-pointer text-xs">
+                  <input
+                    type="checkbox"
+                    checked={use2FA}
+                    onChange={(e) => setUse2FA(e.target.checked)}
+                    className="rounded text-primary focus:ring-primary"
+                  />
+                  <span className="text-muted-foreground">
+                    Simulate Two-Factor Authentication (2FA Verified)
+                  </span>
+                </label>
+
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    onClick={handleApproveInDossier}
+                    disabled={actionLoading}
+                    className="px-4 py-2 bg-safe text-white text-xs font-bold rounded-lg hover:bg-safe/90 transition-colors flex items-center gap-1.5"
+                  >
+                    <Check className="h-3.5 w-3.5" /> Approve &amp; Release Funds
+                  </button>
+                  <button
+                    onClick={handleDeclineInDossier}
+                    disabled={actionLoading}
+                    className="px-4 py-2 bg-secondary text-foreground text-xs font-medium rounded-lg hover:bg-secondary/80 transition-colors"
+                  >
+                    Decline Request
+                  </button>
+                  <button
+                    onClick={handleBlockInDossier}
+                    disabled={actionLoading}
+                    className="px-3 py-2 bg-destructive/10 text-destructive text-xs font-semibold rounded-lg hover:bg-destructive/20 transition-colors"
+                  >
+                    Block Threat
+                  </button>
                 </div>
               </div>
 
@@ -350,8 +594,20 @@ export default function SecurityHistory() {
                         key={log.id}
                         className="flex items-center justify-between p-2.5 rounded-lg bg-secondary/20 border border-border text-xs"
                       >
-                        <span className="font-mono font-semibold text-primary">{log.event}</span>
-                        <span className="text-muted-foreground font-mono text-[11px]">
+                        <div>
+                          <span className="font-mono font-semibold text-primary">{log.event}</span>
+                          {log.metadata?.notes && (
+                            <span className="text-muted-foreground block text-[11px] mt-0.5">
+                              Note: {log.metadata.notes}
+                            </span>
+                          )}
+                          {log.metadata?.reason && (
+                            <span className="text-destructive block text-[11px] mt-0.5">
+                              Reason: {log.metadata.reason}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-muted-foreground font-mono text-[11px] whitespace-nowrap">
                           {new Date(log.timestamp).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",

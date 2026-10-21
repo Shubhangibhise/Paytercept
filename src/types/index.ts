@@ -4,7 +4,16 @@ export type RiskLevel = "SAFE" | "REVIEW" | "HIGH" | "CRITICAL";
 
 export type Decision = "APPROVE" | "VERIFY" | "PAUSE" | "BLOCK";
 
-export type TransactionStatus = "PENDING" | "ANALYZING" | "APPROVED" | "VERIFY" | "PAUSED" | "BLOCKED" | "CANCELLED" | "COMPLETED";
+export type TransactionStatus = "PENDING" | "ANALYZING" | "APPROVED" | "VERIFY" | "PAUSED" | "BLOCKED" | "CANCELLED" | "COMPLETED" | "REJECTED";
+
+export type PaymentCategory =
+  | "PERSONAL"
+  | "VENDOR"
+  | "UTILITIES"
+  | "PAYROLL"
+  | "EMERGENCY"
+  | "SUSPICIOUS"
+  | "OTHER";
 
 export interface RiskSignal {
   type: string;
@@ -37,9 +46,16 @@ export interface Transaction {
   riskLevel?: RiskLevel;
   decision?: Decision;
   status: TransactionStatus;
+  category?: PaymentCategory | string;
   signals?: RiskSignal[];
   agentAssessment?: AgentAssessment;
   userDecision?: string;
+  approvalNotes?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectedReason?: string;
+  requiresApproval?: boolean;
+  verifiedWith2FA?: boolean;
 }
 
 export interface Recipient {
@@ -119,6 +135,7 @@ export const createTransactionSchema = z.object({
   recipientName: z.string().min(1, "Recipient Name is required"),
   purpose: z.string().min(1, "Purpose is required"),
   context: z.string().optional(),
+  category: z.string().optional(),
 });
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;

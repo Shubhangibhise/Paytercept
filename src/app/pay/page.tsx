@@ -26,6 +26,7 @@ function PayFormContent() {
   const [recipientName, setRecipientName] = useState("");
   const [purpose, setPurpose] = useState("");
   const [context, setContext] = useState("");
+  const [category, setCategory] = useState("PERSONAL");
 
   const [step, setStep] = useState<"FORM" | "ANALYZING" | "RESULT" | "CONFIRMED" | "CANCELLED">(
     "FORM"
@@ -46,24 +47,28 @@ function PayFormContent() {
       setRecipientName("Amit Sharma");
       setPurpose("Dinner with team");
       setContext("");
+      setCategory("PERSONAL");
     } else if (demoParam === "new") {
       setAmount("2500");
       setRecipientId("new_user@upi");
       setRecipientName("Rahul Kumar");
       setPurpose("Book purchase");
       setContext("");
+      setCategory("VENDOR");
     } else if (demoParam === "suspicious") {
       setAmount("25000");
       setRecipientId("vendor_rush@upi");
       setRecipientName("Quick Delivery");
       setPurpose("Order Deposit");
       setContext("Please send urgently, discount offer expires in 10 minutes");
+      setCategory("VENDOR");
     } else if (demoParam === "attack") {
       setAmount("95000");
       setRecipientId("kyc_support@upi");
       setRecipientName("Security Desk");
       setPurpose("KYC Update");
       setContext("Your account will be blocked today. Send the money immediately for KYC verification.");
+      setCategory("SUSPICIOUS");
     }
   }, [demoParam]);
 
@@ -79,6 +84,7 @@ function PayFormContent() {
         recipientName,
         purpose,
         context: context || undefined,
+        category: category || undefined,
       };
 
       // 1. Create transaction in DB
@@ -142,6 +148,31 @@ function PayFormContent() {
         setStep("CONFIRMED");
       } else {
         throw new Error("Confirmation failed");
+      }
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleOverrideApprove = async () => {
+    if (!transactionId) return;
+    setActionLoading(true);
+    try {
+      const res = await fetch(`/api/transactions/${transactionId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          notes: "Approved via manual override on Pay screen",
+          approver: "User (Direct Authorization)",
+          verifiedWith2FA: true,
+        }),
+      });
+      if (res.ok) {
+        setStep("CONFIRMED");
+      } else {
+        throw new Error("Approval failed");
       }
     } catch (e: any) {
       setError(e.message);
@@ -458,18 +489,43 @@ function PayFormContent() {
                   {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                   CONFIRM SIMULATED PAYMENT
                 </button>
-              ) : (
+              ) : finalDecision === "BLOCK" ? (
                 <>
                   <Link
                     href="/history"
                     className="w-full py-3 px-4 bg-secondary text-secondary-foreground text-center font-semibold rounded-lg hover:bg-secondary/90 transition-colors text-sm"
                   >
-                    VERIFY RECIPIENT IN SECURITY DOSSIER
+                    INSPECT IN SECURITY HISTORY
                   </Link>
                   <button
                     onClick={handleCancelPayment}
                     disabled={actionLoading}
                     className="w-full py-3 px-4 bg-destructive/10 text-destructive text-center font-semibold rounded-lg hover:bg-destructive/20 transition-colors text-sm flex items-center justify-center gap-2"
+                  >
+                    {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    DISMISS / CANCEL PAYMENT
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleOverrideApprove}
+                    disabled={actionLoading}
+                    className="w-full py-3 px-4 bg-safe text-white text-center font-semibold rounded-lg hover:bg-safe/90 transition-colors text-sm flex items-center justify-center gap-2"
+                  >
+                    {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    APPROVE &amp; AUTHORIZE PAYMENT (OVERRIDE)
+                  </button>
+                  <Link
+                    href="/approvals"
+                    className="w-full py-2.5 px-4 bg-warning/10 text-warning border border-warning/30 text-center font-semibold rounded-lg hover:bg-warning/20 transition-colors text-xs"
+                  >
+                    SEND TO APPROVALS QUEUE
+                  </Link>
+                  <button
+                    onClick={handleCancelPayment}
+                    disabled={actionLoading}
+                    className="w-full py-2 px-4 bg-destructive/10 text-destructive text-center font-semibold rounded-lg hover:bg-destructive/20 transition-colors text-xs flex items-center justify-center gap-2"
                   >
                     {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     CANCEL PAYMENT (RECOMMENDED)
@@ -570,6 +626,26 @@ function PayFormContent() {
               required
               disabled={isSubmitting}
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="category" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Payment Category
+            </label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-info transition-shadow text-foreground"
+              disabled={isSubmitting}
+            >
+              <option value="PERSONAL">Personal Transfer</option>
+              <option value="VENDOR">Vendor &amp; Bills</option>
+              <option value="UTILITIES">Utilities</option>
+              <option value="PAYROLL">Payroll / Salary</option>
+              <option value="EMERGENCY">Emergency</option>
+              <option value="SUSPICIOUS">Suspicious Pretext</option>
+            </select>
           </div>
 
           <div className="space-y-1.5">

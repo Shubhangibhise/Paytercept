@@ -7,8 +7,8 @@ import { ShieldAlert } from "lucide-react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Paytercept | Agentic Payment Guardian",
-  description: "Think before you pay.",
+  title: "Paytercept.ai | Agentic Payment Guardian & Approval Hub",
+  description: "Think before you pay. Categorized scam interception & approval intelligence.",
 };
 
 export default function RootLayout({
@@ -23,12 +23,30 @@ export default function RootLayout({
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 text-primary">
               <ShieldAlert className="h-6 w-6 text-safe" />
-              <span className="font-semibold text-lg tracking-wide">Paytercept</span>
+              <span className="font-semibold text-lg tracking-wide">
+                Paytercept<span className="text-info font-mono text-sm">.ai</span>
+              </span>
             </Link>
             <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
-              <Link href="/" className="hover:text-foreground transition-colors">Dashboard</Link>
-              <Link href="/pay" className="hover:text-foreground transition-colors">Pay</Link>
-              <Link href="/history" className="hover:text-foreground transition-colors">History</Link>
+              <Link href="/" className="hover:text-foreground transition-colors">
+                Dashboard
+              </Link>
+              <Link
+                href="/approvals"
+                className="hover:text-foreground transition-colors flex items-center gap-1.5 text-warning font-semibold"
+              >
+                Approvals
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-warning"></span>
+                </span>
+              </Link>
+              <Link href="/pay" className="hover:text-foreground transition-colors">
+                Pay
+              </Link>
+              <Link href="/history" className="hover:text-foreground transition-colors">
+                History
+              </Link>
             </nav>
           </div>
         </header>

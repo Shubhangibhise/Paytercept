@@ -26,7 +26,8 @@
           "severity": "HIGH",
           "description": "Recipient identity has not been verified by authoritative sources."
         }
-      ]
+      ],
+      "category": "VENDOR"
     },
     {
       "id": "tx-1789138316627-653",
@@ -73,7 +74,8 @@
           "severity": "LOW",
           "description": "Transaction amount significantly deviates from historical baseline."
         }
-      ]
+      ],
+      "category": "SUSPICIOUS"
     },
     {
       "id": "tx-1789138211522-889",
@@ -102,7 +104,8 @@
           "severity": "HIGH",
           "description": "Recipient identity has not been verified by authoritative sources."
         }
-      ]
+      ],
+      "category": "PERSONAL"
     },
     {
       "id": "tx-1789138163146-498",
@@ -131,7 +134,8 @@
           "severity": "LOW",
           "description": "Transaction amount significantly deviates from historical baseline."
         }
-      ]
+      ],
+      "category": "PERSONAL"
     },
     {
       "id": "tx-1789138087347-882",
@@ -147,7 +151,8 @@
       "riskScore": 0,
       "riskLevel": "SAFE",
       "decision": "APPROVE",
-      "signals": []
+      "signals": [],
+      "category": "PERSONAL"
     },
     {
       "id": "tx-1789134988275-701",
@@ -193,7 +198,8 @@
           "severity": "LOW",
           "description": "Transaction amount significantly deviates from historical baseline."
         }
-      ]
+      ],
+      "category": "SUSPICIOUS"
     },
     {
       "id": "tx-1789134684080-742",
@@ -221,7 +227,8 @@
           "severity": "HIGH",
           "description": "Recipient identity has not been verified by authoritative sources."
         }
-      ]
+      ],
+      "category": "VENDOR"
     },
     {
       "id": "tx-1789134523835-265",
@@ -267,7 +274,8 @@
           "severity": "LOW",
           "description": "Transaction amount significantly deviates from historical baseline."
         }
-      ]
+      ],
+      "category": "SUSPICIOUS"
     },
     {
       "id": "tx-1789130528875-223",
@@ -313,7 +321,8 @@
           "severity": "LOW",
           "description": "Transaction amount significantly deviates from historical baseline."
         }
-      ]
+      ],
+      "category": "SUSPICIOUS"
     },
     {
       "id": "tx-1789128616193-323",
@@ -341,7 +350,8 @@
           "severity": "HIGH",
           "description": "Recipient identity has not been verified by authoritative sources."
         }
-      ]
+      ],
+      "category": "PERSONAL"
     },
     {
       "id": "tx-1789128535386-985",
@@ -356,7 +366,8 @@
       "riskScore": 0,
       "riskLevel": "SAFE",
       "decision": "APPROVE",
-      "signals": []
+      "signals": [],
+      "category": "PERSONAL"
     },
     {
       "id": "tx-demo-1",
@@ -380,7 +391,8 @@
         "signals": [],
         "explanation": "Known verified recipient with normal transaction amount.",
         "recommendedVerification": []
-      }
+      },
+      "category": "PERSONAL"
     },
     {
       "id": "tx-demo-2",
@@ -426,7 +438,8 @@
         "recommendedVerification": [
           "Verify recipient identity through official contacts."
         ]
-      }
+      },
+      "category": "VENDOR"
     },
     {
       "id": "tx-demo-3",
@@ -492,7 +505,8 @@
           "Do not send funds under any circumstances.",
           "Contact your bank directly via the number printed on your debit/credit card."
         ]
-      }
+      },
+      "category": "SUSPICIOUS"
     }
   ],
   "auditLogs": [
